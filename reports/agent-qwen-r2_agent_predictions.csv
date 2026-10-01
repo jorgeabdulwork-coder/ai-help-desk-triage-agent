@@ -1,0 +1,236 @@
+ticket_id,subject,description,true_subcategory,pred_subcategory,true_priority,pred_priority,true_kb,kb_used,search_top1,search_top3,needs_review,reply,reply_problems,grounded,invented_quote,judge_check,steps_fit,addresses_issue,tone_ok,judge_note,latency_s
+INC-11393,Outlook won't start,Outlook won't open on my desktop. It just shows a blank white screen.,Outlook,Outlook,Medium,Medium,KB-301,KB-301,KB-301,KB-301;KB-602;KB-401,False,"Hi Elena,
+
+Outlook is showing a blank white screen.
+
+1. Close Outlook completely and open it again.
+2. Check the bottom bar for 'Disconnected' or 'Working offline'.
+3. Restart your computer.
+
+If that doesn't help, we'll repair the Office profile.
+
+IT Help Desk",,False,"1. Close Outlook completely and open it again.
+2. Check the bottom bar for 'Disconnected' or 'Working offline'.
+3. Restart your computer.",likely false alarm: quoted text is in the KB article,True,True,True,none,28.25
+INC-10695,Please call me,My laptop won't connect to the Wi-Fi on and off all week.,Wi-Fi,Wi-Fi,Medium,Medium,KB-501,KB-501,KB-501,KB-501;KB-402;KB-503,False,"Hi Priya,
+
+Your laptop has been having Wi-Fi connection issues.
+
+1. Forget the Wi-Fi network and join it again.
+2. Ensure you are on the correct work network.
+
+If that doesn't help, we'll check the access point.
+
+IT Help Desk",,False,Ensure you are on the correct work network.,confirmed: quoted text not in the KB article,True,True,True,none,21.1
+INC-11681,Issue,"The copier by the break room isn't printing anything, jobs just sit in the queue.",Printer/Scanner,Printer/Scanner,Medium,Medium,KB-401,KB-401,KB-401,KB-401;KB-203;KB-201,False,"Hi Fatima,
+
+Printing jobs are sitting in the queue. Try turning the printer off and on, and cancel any stuck jobs and print again.
+
+If that doesn't help, we'll re-add the printer on the computer for you.
+
+IT Help Desk",,True,,,True,True,True,none,26.27
+INC-12572,Password reset needed,My passowrd expired right after lunch and now I can't sign in to anything. Can someone reset it?,Password Reset,Password Reset,Medium,Medium,KB-101,KB-101,KB-101,KB-101;KB-201;KB-102,False,"Hi Linda,
+
+We will verify your identity by calling back the number on file or confirming with a manager. Then, we will reset your password and require a change at your next sign-in.
+
+IT Help Desk",,True,,,True,True,True,none,23.78
+INC-10284,Receipt printer not printing,The receipt printer on lane 3 stopped printing since we opened. Paper is loaded.,Receipt Printer,Receipt Printer,Medium,Medium,KB-203,KB-203,KB-203,KB-203;KB-401;KB-201,False,"Hi Jamal,
+
+The receipt printer on lane 3 isn't printing. Please check that the paper roll is loaded with the shiny side facing the print head and turn the printer off and on.
+
+If that doesn't help, we'll confirm the printer shows as connected in POS settings.
+
+IT Help Desk",,True,,,True,True,True,none,25.25
+INC-10405,Password reset needed,need a password reset please. i changed it last week and now it doesn't work.,Password Reset,Password Reset,Medium,Medium,KB-101,KB-101,KB-101,KB-101;KB-102;KB-201,False,"Hi Keisha,
+
+If you recently changed your password, try signing in on a work computer connected to the network.
+
+If that doesn't help, we'll verify your identity and reset your password.
+
+IT Help Desk",,True,,,True,True,True,none,24.65
+INC-12212,Says my account is locked,It says my account has been olcked and to contact the administrator.,Account Locked,Account Locked,Medium,Medium,KB-102,KB-102,KB-102,KB-102;KB-101;KB-201,False,"Hi Kevin,
+
+Your account has been locked out.
+
+1. Wait 15 minutes before trying again.
+2. Sign out of email on your phone and other devices that may have an old password saved.
+
+If that doesn't help, we'll confirm your identity and unlock the account. We'll also check the device that keeps sending the old password.
+
+IT Help Desk",,False,We'll also check the device that keeps sending the old password.,likely false alarm: quoted text is in the KB article,False,True,True,We'll also check the device that keeps sending the old password.,27.83
+INC-10496,Account locked again,I keep getting locked out even after it gets unlocked. It happened again since we opened.,Account Locked,Account Locked,Medium,Medium,KB-102,KB-102,KB-102,KB-102;KB-101;KB-201,False,"Hi Robert,
+
+We understand the frustration of repeatedly getting locked out. Please wait 15 minutes before trying again, and sign out of email on your phone and other devices.
+
+If that doesn't help, we'll confirm your identity and unlock the account, then find the device sending the old password.
+
+IT Help Desk",,True,,,True,True,True,none,27.57
+INC-11559,Password reset needed,My password expired this morning and now I can't sign in to anything. Can someone reset it?,Password Reset,Password Reset,Medium,Medium,KB-101,KB-101,KB-101,KB-101;KB-102;KB-201,False,"Hi Elena,
+
+We will verify your identity and reset your password. You will need to change it at your next sign-in.
+
+IT Help Desk",,True,,,False,True,True,none,26.09
+INC-12314,VPN connected but no access,The VPN connects but I can't get to the shared drive.,VPN,VPN,Medium,Medium,KB-503,KB-503,KB-503,KB-503;KB-103;KB-501,False,"Hi Maria,
+
+Make sure your home internet works first. Update the VPN client and sign in again to approve the MFA prompt on your phone.
+
+If that doesn't help, we'll check the VPN account.
+
+IT Help Desk",,False,Update the VPN client and sign in again to approve the MFA prompt on your phone.,likely false alarm: quoted text is in the KB article,False,False,False,Invented quotes and steps do not fit the specific problem.,24.85
+INC-10369,POS error,register 2 shows a blank white screen when we try to sign in.,Register Down,Register Down,High,High,KB-201,KB-201,KB-201,KB-201;KB-203;KB-302,False,"Hi Miguel,
+
+Restart the register and the cash drawer. Check that the network cable at the back of the register is firmly plugged in. If that doesn't help, we'll escalate to the POS team.
+
+IT Help Desk",,True,,,True,True,True,none,27.29
+INC-12076,Can't connect to wifi,My work PC won't connect to the Wi-Fi since we opened.,Wi-Fi,Wi-Fi,Medium,Medium,KB-501,KB-501,KB-501,KB-501;KB-301;KB-503,False,"Hi Priya,
+
+We're sorry to hear you're having trouble connecting to the Wi-Fi.
+
+1. Forget the Wi-Fi network and join it again.
+2. Ensure you are on the correct work network.
+
+If that doesn't help, we'll check the access point.
+
+IT Help Desk",,False,Ensure you are on the correct work network.,confirmed: quoted text not in the KB article,True,True,True,none,27.68
+INC-11026,The timekeeping app not working,"When I open the timekeeping app I get 'something went wrong, try again later'.",Application Error,Application Error,Medium,Medium,KB-602,KB-602,KB-602,KB-602;KB-201;KB-202,False,"Hi Brian,
+
+The timekeeping app is showing an error when you open it.
+
+1. Close the app and open it again.
+2. Install any pending updates.
+
+If that doesn't help, we'll repair or reinstall the app for you.
+
+IT Help Desk",,False,Close the app and open it again.,likely false alarm: quoted text is in the KB article,True,True,True,none,25.75
+INC-10204,Payment terminal declining everything,"Every card is getting declined on register #1 this morning, even cards that work at the other registers.",Card Reader,Card Reader,High,High,KB-202,KB-202,KB-202,KB-202;KB-201;KB-203,False,"Hi Tom,
+
+Every card is getting declined on register #1. Please try the following steps:
+
+1. Unplug the card reader cable and plug it back in.
+2. Restart the payment app.
+3. Run a test transaction.
+
+If that doesn't help, we'll contact the payment processor.
+
+IT Help Desk",,False,Please try the following steps:,confirmed: quoted text not in the KB article,True,True,True,invented_quote,32.12
+INC-10454,Nothing can connect,none of the computers can connect. the modem lights are orange.,Internet Outage,Internet Outage,Urgent,Urgent,KB-502,KB-502,KB-502,KB-502;KB-201;KB-503,False,"Hi Marcus,
+
+Nothing can connect, and the modem lights are orange.
+
+If the lights don't resolve, we'll restart the modem, then the firewall, then the switch, in that order.
+
+Contacting the internet provider if the connection remains down.
+
+IT Help Desk",,False,Contacting the internet provider if the connection remains down.,likely false alarm: quoted text is in the KB article,False,True,True,Contacting the internet provider if the connection remains down.,32.78
+INC-11787,New password not working,Need a password reset please. I changed it last week and now it doesn't work.,Password Reset,Password Reset,Medium,Medium,KB-101,KB-101,KB-101,KB-101;KB-102;KB-201,False,"Hi Michael,
+
+If you recently changed your password, try signing in on a work computer connected to the network. If that doesn't help, we'll verify your identity and reset your password.
+
+IT Help Desk",,False,sign in with the new one on a work computer connected to the network so the change takes effect,likely false alarm: quoted text is in the KB article,False,True,True,sign in with the new one on a work computer connected to the network so the change takes effect,29.39
+INC-11748,Printer not working,"The printer in the manager's office isn't prniting anything, jobs just sit in the queue.",Printer/Scanner,Printer/Scanner,Medium,Medium,KB-401,KB-401,KB-401,KB-401;KB-203;KB-201,False,"Hi Marcus,
+
+Printing jobs are sitting in the queue. Try turning the printer off and on, and cancel any stuck jobs to print again.
+
+If that doesn't help, we'll re-add the printer on your computer.
+
+IT Help Desk",,True,,,True,True,True,none,28.82
+INC-10388,VPN keeps disconnecting,The VPN disconnects every 10 minutes.,VPN,VPN,Medium,Medium,KB-503,KB-503,KB-503,KB-503;KB-701;KB-502,False,"Hi Omar,
+
+The VPN disconnects every 10 minutes. Please make sure your home internet works first and update the VPN client.
+
+If that doesn't help, we'll check the VPN account.
+
+IT Help Desk",,True,,,True,True,True,none,23.92
+INC-11077,Question,The printer in the manager's office says paper jam but there's nothing in there.,Printer/Scanner,Printer/Scanner,Medium,Medium,KB-401,KB-401,KB-401,KB-401;KB-203;KB-201,False,"Hi Carlos,
+
+Printing: turn the printer off and on.
+Printing: cancel stuck jobs and print again.
+
+If that doesn't help, we'll re-add the printer on your computer.
+
+IT Help Desk",,True,,,True,True,True,none,26.88
+INC-10489,Internet down,The internet is down for everyone here about an hour ago. Nothing will load.,Internet Outage,Internet Outage,Urgent,Urgent,KB-502,KB-502,KB-502,KB-502;KB-201;KB-402,False,"Hi Ana,
+
+The internet is down for everyone, and we're aware of the impact.
+
+We will contact the internet provider to resolve the issue.
+
+IT Help Desk",,True,,,True,True,True,none,24.56
+INC-12266,POS not working,The POS on lane 3 keeps restarting by itself in the middle of transactions.,Register Down,Register Down,High,High,KB-201,KB-201,KB-201,KB-201;KB-203;KB-202,False,"Hi Omar,
+
+The POS on your lane keeps restarting during transactions.
+
+If that doesn't help, we'll re-add the printer for you.
+
+If it still won't boot, we'll escalate to the POS team.
+
+IT Help Desk",,False,"If that doesn't help, we'll re-add the printer for you.",confirmed: quoted text not in the KB article,False,False,False,Adding an unrelated printer step and suggesting adding a printer when the issue is with the POS.,27.68
+INC-11757,Not getting emails,i haven't received any emails after the update last night. people say they sent me stuff.,Outlook,Outlook,Medium,Medium,KB-301,KB-301,KB-301,KB-301;KB-602;KB-503,False,"Hi Sofia,
+
+We're sorry to hear you're not receiving emails. Try closing Outlook completely and opening it again. If that doesn't help, restart your computer.
+
+If mail still doesn't sync, we'll repair your Office profile.
+
+IT Help Desk",,False,Try closing Outlook completely and opening it again.,confirmed: quoted text not in the KB article,False,True,True,"The steps suggested do not fit the specific problem of not receiving emails, as the KB article suggests steps for Outlook not opening or syncing, not for email delivery issues.",31.77
+INC-10375,Forgot my password,I forgot my password and can't log into my computer. I tried on and off all week and it keeps saying the password is incorrect.,Password Reset,Password Reset,Medium,Medium,KB-101,KB-101,KB-101,KB-101;KB-102;KB-201,False,"Hi Linda,
+
+Check that Caps Lock is off and try signing in with the new password on a work computer connected to the network.
+
+If that doesn't help, we'll verify your identity and reset your password.
+
+IT Help Desk",,True,,,True,True,True,none,27.74
+INC-12290,Can't sign in to register,"Register 4 shows 'something went wrong, try again later' when we try to sign in.",Register Down,Register Down,High,High,KB-201,KB-201,KB-201,KB-201;KB-302;KB-101,False,"Hi Jamal,
+
+Register 4 shows 'something went wrong, try again later' when signing in. Please restart the register and the cash drawer, and ensure the network cable is securely plugged in.
+
+If that doesn't help, we'll escalate to the POS team.
+
+IT Help Desk",,True,,,False,True,True,steps_fit,30.21
+INC-10586,The front register is down,The front register froze since yesterday and won't respond. We restarted it and it's stuck on the loading screen.,Register Down,Register Down,High,High,KB-201,KB-201,KB-201,KB-201;KB-602;KB-402,False,"Hi Elena,
+
+The front register froze and is stuck on the loading screen. Please try the following steps:
+
+1. Restart the register and the cash drawer.
+2. Ensure the network cable at the back of the register is securely plugged in.
+
+If that doesn't help, we'll escalate to the POS team.
+
+IT Help Desk",,False,Please try the following steps:,confirmed: quoted text not in the KB article,True,True,True,none,29.95
+INC-11038,Access to Marketing folder,I need access to the Marketing folder on the shared drive for my new role.,Access Request,Access Request,Low,Low,KB-103,KB-103,KB-103,KB-103;KB-303;KB-601,False,"Hi Michael,
+
+We understand you need access to the Marketing folder for your new role. Please ask your manager to approve the request and include the folder name and your reason for needing it.
+
+If that doesn't help, we'll grant access after manager approval.
+
+IT Help Desk",,True,,,True,True,True,none,23.27
+INC-12496,Can't send from shared mailbox,I can see the scheduling inbox but when I try to send from it I get a 'Not Responding' message.,Shared Mailbox,Shared Mailbox,Low,Low,KB-303,KB-303,KB-303,KB-303;KB-301;KB-202,False,"Hi Rosa,
+
+We understand you're having trouble sending from the shared mailbox. Please ask the mailbox owner to approve your access. After approval, restart Outlook as the mailbox may take a few hours to appear.
+
+If that doesn't help, we'll grant access once the owner approves.
+
+IT Help Desk",,True,,,True,True,True,none,23.75
+INC-12491,Forgot my password,I forgot my password and can't log into my work PC. I tried this morning and it keeps saying the password is incorrect.,Password Reset,Password Reset,Medium,Medium,KB-101,KB-101,KB-101,KB-101;KB-102;KB-201,False,"Hi Omar,
+
+Check that Caps Lock is off. If you recently changed your password, try signing in with the new one on a work computer connected to the network.
+
+If that doesn't help, we'll verify your identity and reset your password, requiring a change at your next sign-in.
+
+IT Help Desk",,False,"If you recently changed your password, try signing in with the new one on a work computer connected to the network.",likely false alarm: quoted text is in the KB article,False,True,True,invented_quote,27.2
+INC-12833,Register frozen,Register #1 froze on and off all week and won't respond. We restarted it and it's stuck on the loading screen.,Register Down,Register Down,High,High,KB-201,KB-201,KB-201,KB-201;KB-402;KB-602,False,"Hi Kevin,
+
+Register #1 has been freezing and is stuck on the loading screen. Please try the following:
+
+1. Restart the register and the cash drawer.
+2. Ensure the network cable at the back of the register is securely plugged in.
+
+If that doesn't help, we'll escalate to the POS team.
+
+IT Help Desk",,False,Please try the following:,confirmed: quoted text not in the KB article,True,True,True,none,26.01
+INC-12745,Account locked,It says my account has been locked and to contact the administrator.,Account Locked,Account Locked,Medium,Medium,KB-102,KB-102,KB-102,KB-102;KB-101;KB-201,False,"Hi Michael,
+
+Account locked messages can be frustrating. Please wait 15 minutes and try signing out of your email on your phone and other devices.
+
+If that doesn't help, we'll confirm your identity and unlock the account. We'll also check for any devices sending the old password.
+
+IT Help Desk",,True,,,True,True,True,none,25.59

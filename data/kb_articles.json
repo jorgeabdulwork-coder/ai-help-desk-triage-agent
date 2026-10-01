@@ -1,0 +1,289 @@
+[
+  {
+    "id": "KB-101",
+    "category": "Access & Accounts",
+    "subcategory": "Password Reset",
+    "default_priority": "Medium",
+    "title": "Resetting a forgotten or expired password",
+    "summary": "Verify identity by callback to the number on file or manager confirmation, then reset and require a change at next sign-in.",
+    "user_steps": [
+      "If you think you may be mistyping it, check that Caps Lock is off",
+      "If you changed your password recently, sign in with the new one on a work computer connected to the network so the change takes effect"
+    ],
+    "it_steps": [
+      "Verify identity by calling back the number on file or confirming with a manager",
+      "Reset a forgotten or expired password and require a change at next sign-in"
+    ]
+  },
+  {
+    "id": "KB-102",
+    "category": "Access & Accounts",
+    "subcategory": "Account Locked",
+    "default_priority": "Medium",
+    "title": "Unlocking a locked-out account",
+    "summary": "Confirm identity, unlock the account, and check for old saved passwords on phones or mapped drives that keep re-locking it.",
+    "user_steps": [
+      "Wait 15 minutes before trying again",
+      "Sign out of email on your phone and other devices that may have an old password saved"
+    ],
+    "it_steps": [
+      "Confirm identity and unlock the account",
+      "Find the device that keeps sending the old password"
+    ]
+  },
+  {
+    "id": "KB-103",
+    "category": "Access & Accounts",
+    "subcategory": "Access Request",
+    "default_priority": "Low",
+    "title": "Requesting access to a system or shared folder",
+    "summary": "Access needs manager approval; submit the Access Request catalog item with the system name and business reason.",
+    "user_steps": [
+      "Ask your manager to approve the request",
+      "Include the folder or system name and why you need it"
+    ],
+    "it_steps": [
+      "Grant access after manager approval"
+    ]
+  },
+  {
+    "id": "KB-201",
+    "category": "Point of Sale",
+    "subcategory": "Register Down",
+    "default_priority": "High",
+    "title": "Register won't boot or freezes",
+    "summary": "Power cycle the register and cash drawer, check the network cable, then escalate to the POS team if it won't reach the sign-in screen.",
+    "user_steps": [
+      "Restart the register and the cash drawer",
+      "Check that the network cable at the back of the register is firmly plugged in",
+      "Use another register in the meantime if one is available"
+    ],
+    "it_steps": [
+      "Escalate to the POS team if it still won't reach the sign-in screen"
+    ]
+  },
+  {
+    "id": "KB-202",
+    "category": "Point of Sale",
+    "subcategory": "Card Reader",
+    "default_priority": "High",
+    "title": "Card reader not accepting payments",
+    "summary": "Reseat the reader cable, restart the payment app, and run a test transaction; switch to the backup reader if it still fails.",
+    "user_steps": [
+      "Unplug the card reader cable and plug it back in",
+      "Restart the payment app",
+      "Run a test transaction",
+      "Switch to the backup reader if it still fails"
+    ],
+    "it_steps": [
+      "Contact the payment processor if the backup reader also fails"
+    ]
+  },
+  {
+    "id": "KB-203",
+    "category": "Point of Sale",
+    "subcategory": "Receipt Printer",
+    "default_priority": "Medium",
+    "title": "Receipt printer not printing",
+    "summary": "Check paper roll orientation, clear jams, power cycle, and confirm the printer shows as connected in POS settings.",
+    "user_steps": [
+      "Check that the paper roll is loaded with the shiny side facing the print head",
+      "Open the cover and clear any jammed paper",
+      "Turn the printer off and on"
+    ],
+    "it_steps": [
+      "Confirm the printer shows as connected in POS settings"
+    ]
+  },
+  {
+    "id": "KB-301",
+    "category": "Email & Collaboration",
+    "subcategory": "Outlook",
+    "default_priority": "Medium",
+    "title": "Outlook won't open or sync",
+    "summary": "Restart Outlook, check connection status, and repair the Office profile if mail still doesn't sync.",
+    "user_steps": [
+      "Close Outlook completely and open it again",
+      "Check the bottom bar of Outlook for 'Disconnected' or 'Working offline'",
+      "Restart your computer"
+    ],
+    "it_steps": [
+      "Repair the Office profile if mail still doesn't sync"
+    ]
+  },
+  {
+    "id": "KB-302",
+    "category": "Email & Collaboration",
+    "subcategory": "Teams",
+    "default_priority": "Low",
+    "title": "Teams audio, video, or sign-in problems",
+    "summary": "Check device settings in Teams, clear the Teams cache, and sign out and back in.",
+    "user_steps": [
+      "Check your microphone and speaker in Teams settings under Devices",
+      "Sign out of Teams and sign back in",
+      "Restart Teams"
+    ],
+    "it_steps": [
+      "Clear the Teams cache remotely if the problem continues"
+    ]
+  },
+  {
+    "id": "KB-303",
+    "category": "Email & Collaboration",
+    "subcategory": "Shared Mailbox",
+    "default_priority": "Low",
+    "title": "Getting access to a shared mailbox",
+    "summary": "Shared mailbox access needs owner approval; once granted it appears in Outlook automatically within a few hours.",
+    "user_steps": [
+      "Ask the mailbox owner to approve access",
+      "After access is granted, restart Outlook; the mailbox can take a few hours to appear"
+    ],
+    "it_steps": [
+      "Grant access once the owner approves"
+    ]
+  },
+  {
+    "id": "KB-401",
+    "category": "Hardware",
+    "subcategory": "Printer/Scanner",
+    "default_priority": "Medium",
+    "title": "Office printer or scanner problems",
+    "summary": "Check for jams and toner, restart the printer, and re-add it on the computer if jobs are stuck in the queue; for scan to email, check the address and the copier's email settings.",
+    "user_steps": [
+      "Printing: check the printer screen for jams or low toner",
+      "Printing: turn the printer off and on",
+      "Printing: cancel stuck jobs and print again",
+      "Scan to email: check that the email address is typed correctly",
+      "Scan to email: try scanning a single page to rule out a size limit"
+    ],
+    "it_steps": [
+      "Printing: re-add the printer on the computer if jobs stay stuck",
+      "Scan to email: check the copier's email settings, such as the mail server sign-in"
+    ]
+  },
+  {
+    "id": "KB-402",
+    "category": "Hardware",
+    "subcategory": "Computer",
+    "default_priority": "Medium",
+    "title": "Slow or unresponsive computer",
+    "summary": "Restart, check free disk space and pending updates, and run the hardware diagnostic if the problem continues.",
+    "user_steps": [
+      "Restart the computer",
+      "Save your work and close programs you aren't using",
+      "Let pending updates finish"
+    ],
+    "it_steps": [
+      "Check disk space and run hardware diagnostics if the problem continues"
+    ]
+  },
+  {
+    "id": "KB-403",
+    "category": "Hardware",
+    "subcategory": "Peripherals",
+    "default_priority": "Low",
+    "title": "Mouse, keyboard, monitor, or dock issues",
+    "summary": "Try a different port, reseat the dock, and swap with a known-good device; request a replacement through the Hardware catalog item.",
+    "user_steps": [
+      "Unplug the device and plug it into a different port",
+      "Reseat the docking station cable",
+      "Try a device that is known to work"
+    ],
+    "it_steps": [
+      "Send a replacement through the Hardware catalog item"
+    ]
+  },
+  {
+    "id": "KB-501",
+    "category": "Network",
+    "subcategory": "Wi-Fi",
+    "default_priority": "Medium",
+    "title": "Wi-Fi connection problems",
+    "summary": "Forget and rejoin the network, confirm the correct SSID, and check whether other devices at the site are affected.",
+    "user_steps": [
+      "Forget the Wi-Fi network and join it again",
+      "Make sure you are on the correct work network",
+      "Check whether other devices nearby have the same problem"
+    ],
+    "it_steps": [
+      "Check the access point if several devices are affected"
+    ]
+  },
+  {
+    "id": "KB-502",
+    "category": "Network",
+    "subcategory": "Internet Outage",
+    "default_priority": "Urgent",
+    "title": "Site-wide internet outage",
+    "summary": "Check modem and firewall lights, power cycle in order (modem, firewall, switch), and contact the ISP if the circuit is down.",
+    "user_steps": [
+      "Check the lights on the modem and firewall",
+      "Restart the modem, then the firewall, then the switch, in that order"
+    ],
+    "it_steps": [
+      "Contact the internet provider if the connection is still down"
+    ]
+  },
+  {
+    "id": "KB-503",
+    "category": "Network",
+    "subcategory": "VPN",
+    "default_priority": "Medium",
+    "title": "VPN won't connect",
+    "summary": "Confirm home internet works, update the VPN client, re-enter credentials, and approve the MFA prompt on your phone.",
+    "user_steps": [
+      "Make sure your home internet works first",
+      "Update the VPN client",
+      "Sign in again and approve the MFA prompt on your phone"
+    ],
+    "it_steps": [
+      "Check the VPN account if it still fails"
+    ]
+  },
+  {
+    "id": "KB-601",
+    "category": "Software",
+    "subcategory": "Install Request",
+    "default_priority": "Low",
+    "title": "Requesting new software",
+    "summary": "Submit the Software Request catalog item; licensed software needs manager approval before install.",
+    "user_steps": [
+      "Submit the Software Request form",
+      "Ask your manager to approve it"
+    ],
+    "it_steps": [
+      "Install the software after approval"
+    ]
+  },
+  {
+    "id": "KB-602",
+    "category": "Software",
+    "subcategory": "Application Error",
+    "default_priority": "Medium",
+    "title": "Application crashing or showing errors",
+    "summary": "Reopen the app, install pending updates, and repair or reinstall if it still crashes; include the exact error text.",
+    "user_steps": [
+      "Close the app and open it again",
+      "Install any pending updates",
+      "Write down the exact error message"
+    ],
+    "it_steps": [
+      "Repair or reinstall the app if it keeps failing"
+    ]
+  },
+  {
+    "id": "KB-701",
+    "category": "Phones",
+    "subcategory": "Desk Phone",
+    "default_priority": "Medium",
+    "title": "Desk phone or voicemail problems",
+    "summary": "Check the network cable into the phone, unplug it for 10 seconds, and reset the voicemail PIN from the admin portal if needed.",
+    "user_steps": [
+      "Check that the network cable is plugged into the phone",
+      "Unplug the phone for 10 seconds and plug it back in"
+    ],
+    "it_steps": [
+      "Reset the voicemail PIN from the admin portal if needed"
+    ]
+  }
+]

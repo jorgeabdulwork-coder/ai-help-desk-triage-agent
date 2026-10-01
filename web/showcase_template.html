@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Help Desk Triage Agent</title>
+<meta name="description" content="An AI agent that classifies IT help desk tickets, sets priority with verifiable rules, finds the knowledge base article, and drafts a reply for a human to review.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏷️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap">
+<style>/*STYLE*/</style>
+</head>
+<body>
+<header class="wrap site-head">
+  <a class="name" href="#top">AI Help Desk Triage Agent</a>
+  <nav><a href="#examples">Examples</a><a href="#results">Results</a><a href="#lessons">Lessons</a>/*REPO_LINK*/</nav>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <h1>AI Help Desk Triage Agent</h1>
+      <p class="lede">It reads an IT ticket the way an employee wrote it, works out what the problem is and how urgent it is, finds the right knowledge base article, and drafts a reply for a human agent to check. It runs entirely on free, local AI models.</p>
+      <div class="hero__flow" id="hero"></div>
+    </div>
+  </section>
+
+  <section id="examples">
+    <div class="wrap">
+      <h2>Real tickets, real output</h2>
+      <p class="intro">Each example below is the agent's actual output, chosen to show a different situation: impact buried in the text, a vague subject, two problems in one ticket, and a misclassification the agent caught itself.</p>
+      <div class="picker">
+        <ul class="picker__list" id="picker"></ul>
+        <div id="pick-detail" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="results">
+    <div class="wrap">
+      <h2>How it got to 97%</h2>
+      <p class="intro">Share of tickets with both the problem type and the priority correct, on 200 held-out tickets. Each version changed one thing based on what the previous evaluation showed. The last line is a fresh set generated after tuning ended, so it measures tickets no version had seen.</p>
+      <ol class="journey" id="journey"></ol>
+    </div>
+  </section>
+
+  <section id="lessons">
+    <div class="wrap">
+      <h2>What I learned</h2>
+      <div class="lessons" id="lesson-list"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p style="margin:0">/*AUTHOR*/All tickets are synthetic: no real organizational or employee data. Models run locally with Ollama (/*MODELS*/). Page generated /*DATE*/.</p>
+  </div>
+</footer>
+
+<script>/*RENDER*/</script>
+<script>
+  const DATA = /*DATA*/;
+  const T = window.Triage;
+
+  // Hero: the raw ticket, then its tag.
+  const h = DATA.hero;
+  document.getElementById("hero").innerHTML = `
+    ${T.rawTicket(h.ticket)}
+    <div class="hero__arrow" aria-hidden="true">
+      <svg width="56" height="16" viewBox="0 0 56 16"><path d="M0 8h52M44 1l8 7-8 7" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      <span>${Math.max(1, Math.round(h.latency_s))} seconds later</span>
+    </div>
+    ${T.tag(h, { noFlag: true })}`;
+
+  // Example picker.
+  const list = document.getElementById("picker"), pane = document.getElementById("pick-detail");
+  list.innerHTML = DATA.examples.map((e, i) => `
+    <li><button type="button" data-i="${i}" aria-pressed="false">
+      <span class="dot dot--${T.esc((e.result.triage.priority || "").toLowerCase())}" aria-hidden="true"></span>
+      <span><span class="s">${T.esc(e.result.ticket.subject)}</span><span class="w">${T.esc(e.caption)}</span></span>
+    </button></li>`).join("");
+  function show(i) {
+    list.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.i === i)));
+    const e = DATA.examples[i];
+    pane.innerHTML = `<div class="picker__raw">${T.rawTicket(e.result.ticket)}</div>${T.detail(e.result)}`;
+  }
+  list.addEventListener("click", (ev) => { const b = ev.target.closest("button"); if (b) show(+b.dataset.i); });
+  show(0);
+
+  // Results journey.
+  document.getElementById("journey").innerHTML = DATA.journey.map((j) => `
+    <li class="${j.final ? "final" : ""}">
+      <span class="v">${T.esc(j.version)}<span class="m">${T.esc(j.model)}</span></span>
+      <div>
+        <div class="bar"><div class="bar__track"><div class="bar__fill" style="width:${j.fully_correct}%"></div></div>
+          <span class="bar__n">${j.fully_correct.toFixed(1)}%</span></div>
+        <p>${T.esc(j.note)}</p>
+      </div>
+    </li>`).join("");
+
+  document.getElementById("lesson-list").innerHTML = DATA.lessons.map((l) =>
+    `<div><h3>${T.esc(l.title)}</h3><p>${T.esc(l.text)}</p></div>`).join("");
+</script>
+</body>
+</html>

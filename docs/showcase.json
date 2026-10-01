@@ -1,0 +1,525 @@
+{
+ "hero": {
+  "ticket": {
+   "ticket_id": "INC-10349",
+   "requester": "Sofia Jackson",
+   "role": "Cashier",
+   "location": "Store 010",
+   "subject": "Issue",
+   "description": "my desktop won't connect to the wi-fi since we opened. several of us are having the same problem."
+  },
+  "triage": {
+   "ok": true,
+   "error": "",
+   "category": "Network",
+   "subcategory": "Wi-Fi",
+   "priority": "High",
+   "default_priority": "Medium",
+   "raise_rule": "several_people",
+   "evidence": "several of us are having the same problem",
+   "raise_check": "accepted",
+   "reason": "Multiple people are having wireless problems; the ticket says several of us are affected."
+  },
+  "kb": {
+   "primary": {
+    "id": "KB-501",
+    "title": "Wi-Fi connection problems"
+   },
+   "related": [
+    {
+     "id": "KB-301",
+     "title": "Outlook won't open or sync",
+     "score": 0.687
+    },
+    {
+     "id": "KB-503",
+     "title": "VPN won't connect",
+     "score": 0.677
+    }
+   ],
+   "needs_review": false,
+   "review_note": ""
+  },
+  "reply": "Hi Sofia,\n\nYour desktop won't connect to the Wi-Fi since we opened. Please try forgetting the Wi-Fi network and joining it again. Make sure you are on the correct work network.\n\nWe will check the access point if several devices are affected.\n\nIT Help Desk",
+  "reply_problems": [],
+  "needs_review": false,
+  "latency_s": 15.66,
+  "models": {
+   "classifier": "llama3.2:3b",
+   "reply": "qwen2.5:7b",
+   "embeddings": "nomic-embed-text"
+  },
+  "expected": {
+   "subcategory": "Wi-Fi",
+   "priority": "High"
+  }
+ },
+ "examples": [
+  {
+   "caption": "Customers waiting at the register",
+   "result": {
+    "ticket": {
+     "ticket_id": "INC-10118",
+     "requester": "Omar White",
+     "role": "Retail Associate",
+     "location": "Store 018",
+     "subject": "Card reader not connected",
+     "description": "The payment terminal on register 2 says 'device not connected'. We have a line of customers waiting."
+    },
+    "triage": {
+     "ok": true,
+     "error": "",
+     "category": "Point of Sale",
+     "subcategory": "Card Reader",
+     "priority": "Urgent",
+     "default_priority": "High",
+     "raise_rule": "customers_waiting",
+     "evidence": "We have a line of customers waiting",
+     "raise_check": "accepted",
+     "reason": "The card reader is not connected; customers are waiting."
+    },
+    "kb": {
+     "primary": {
+      "id": "KB-202",
+      "title": "Card reader not accepting payments"
+     },
+     "related": [
+      {
+       "id": "KB-201",
+       "title": "Register won't boot or freezes",
+       "score": 0.724
+      },
+      {
+       "id": "KB-203",
+       "title": "Receipt printer not printing",
+       "score": 0.681
+      }
+     ],
+     "needs_review": false,
+     "review_note": ""
+    },
+    "reply": "Hi Omar,\n\nThe payment terminal says 'device not connected'. Please try:\n1. Unplug the card reader cable and plug it back in.\n2. Restart the payment app.\n3. Run a test transaction.\n\nWe will contact the payment processor if the backup reader also fails.\n\nIT Help Desk",
+    "reply_problems": [],
+    "needs_review": false,
+    "latency_s": 16.29,
+    "models": {
+     "classifier": "llama3.2:3b",
+     "reply": "qwen2.5:7b",
+     "embeddings": "nomic-embed-text"
+    },
+    "expected": {
+     "subcategory": "Card Reader",
+     "priority": "Urgent"
+    }
+   }
+  },
+  {
+   "caption": "Vague subject, impact buried at the end",
+   "result": {
+    "ticket": {
+     "ticket_id": "INC-10349",
+     "requester": "Sofia Jackson",
+     "role": "Cashier",
+     "location": "Store 010",
+     "subject": "Issue",
+     "description": "my desktop won't connect to the wi-fi since we opened. several of us are having the same problem."
+    },
+    "triage": {
+     "ok": true,
+     "error": "",
+     "category": "Network",
+     "subcategory": "Wi-Fi",
+     "priority": "High",
+     "default_priority": "Medium",
+     "raise_rule": "several_people",
+     "evidence": "several of us are having the same problem",
+     "raise_check": "accepted",
+     "reason": "Multiple people are having wireless problems; the ticket says several of us are affected."
+    },
+    "kb": {
+     "primary": {
+      "id": "KB-501",
+      "title": "Wi-Fi connection problems"
+     },
+     "related": [
+      {
+       "id": "KB-301",
+       "title": "Outlook won't open or sync",
+       "score": 0.687
+      },
+      {
+       "id": "KB-503",
+       "title": "VPN won't connect",
+       "score": 0.677
+      }
+     ],
+     "needs_review": false,
+     "review_note": ""
+    },
+    "reply": "Hi Sofia,\n\nYour desktop won't connect to the Wi-Fi since we opened. Please try forgetting the Wi-Fi network and joining it again. Make sure you are on the correct work network.\n\nWe will check the access point if several devices are affected.\n\nIT Help Desk",
+    "reply_problems": [],
+    "needs_review": false,
+    "latency_s": 15.66,
+    "models": {
+     "classifier": "llama3.2:3b",
+     "reply": "qwen2.5:7b",
+     "embeddings": "nomic-embed-text"
+    },
+    "expected": {
+     "subcategory": "Wi-Fi",
+     "priority": "High"
+    }
+   }
+  },
+  {
+   "caption": "Repeated lockouts, but only one person",
+   "result": {
+    "ticket": {
+     "ticket_id": "INC-10029",
+     "requester": "Elena Martinez",
+     "role": "Retail Associate",
+     "location": "Store 019",
+     "subject": "Account locked again",
+     "description": "I keep getting locked out even after it gets unlocked. It happened again on and off all week."
+    },
+    "triage": {
+     "ok": true,
+     "error": "",
+     "category": "Access & Accounts",
+     "subcategory": "Account Locked",
+     "priority": "Medium",
+     "default_priority": "Medium",
+     "raise_rule": "several_people",
+     "evidence": "I keep getting locked out even after it gets unlocked",
+     "raise_check": "rejected: quote doesn't fit the rule",
+     "reason": "The account is locked out repeatedly; the person says it happens on and off all week."
+    },
+    "kb": {
+     "primary": {
+      "id": "KB-102",
+      "title": "Unlocking a locked-out account"
+     },
+     "related": [
+      {
+       "id": "KB-101",
+       "title": "Resetting a forgotten or expired password",
+       "score": 0.672
+      },
+      {
+       "id": "KB-201",
+       "title": "Register won't boot or freezes",
+       "score": 0.625
+      }
+     ],
+     "needs_review": false,
+     "review_note": ""
+    },
+    "reply": "Hi Elena,\n\nPlease try: Wait 15 minutes before trying again.\nPlease try: Sign out of email on your phone and other devices that may have an old password saved.\n\nWe will confirm your identity and unlock the account, then find the device that keeps sending the old password.\n\nIT Help Desk",
+    "reply_problems": [],
+    "needs_review": false,
+    "latency_s": 18.34,
+    "models": {
+     "classifier": "llama3.2:3b",
+     "reply": "qwen2.5:7b",
+     "embeddings": "nomic-embed-text"
+    },
+    "expected": {
+     "subcategory": "Account Locked",
+     "priority": "Medium"
+    }
+   }
+  },
+  {
+   "caption": "Expired password, unhelpful subject",
+   "result": {
+    "ticket": {
+     "ticket_id": "INC-10026",
+     "requester": "Marcus Rodriguez",
+     "role": "Processor",
+     "location": "Donation Center B",
+     "subject": "Issue",
+     "description": "My password expired about an hour ago and now I can't sign in to anything. Can someone reset it?"
+    },
+    "triage": {
+     "ok": true,
+     "error": "",
+     "category": "Access & Accounts",
+     "subcategory": "Password Reset",
+     "priority": "Medium",
+     "default_priority": "Medium",
+     "raise_rule": "several_people",
+     "evidence": "My password expired about an hour ago",
+     "raise_check": "rejected: quote doesn't fit the rule",
+     "reason": "A forgotten password is a password reset problem."
+    },
+    "kb": {
+     "primary": {
+      "id": "KB-101",
+      "title": "Resetting a forgotten or expired password"
+     },
+     "related": [
+      {
+       "id": "KB-102",
+       "title": "Unlocking a locked-out account",
+       "score": 0.692
+      },
+      {
+       "id": "KB-201",
+       "title": "Register won't boot or freezes",
+       "score": 0.669
+      }
+     ],
+     "needs_review": false,
+     "review_note": ""
+    },
+    "reply": "Hi Marcus,\n\nWe will verify your identity and reset your password. Please try checking that Caps Lock is off if you think you may be mistyping it.\n\nIT Help Desk",
+    "reply_problems": [],
+    "needs_review": false,
+    "latency_s": 14.78,
+    "models": {
+     "classifier": "llama3.2:3b",
+     "reply": "qwen2.5:7b",
+     "embeddings": "nomic-embed-text"
+    },
+    "expected": {
+     "subcategory": "Password Reset",
+     "priority": "Medium"
+    }
+   }
+  },
+  {
+   "caption": "Two problems in one ticket",
+   "result": {
+    "ticket": {
+     "ticket_id": "INC-10091",
+     "requester": "Luis Allen",
+     "role": "Retail Associate",
+     "location": "Store 017",
+     "subject": "No receipts coming out",
+     "description": "The receipt printer on register 4 stopped printing about an hour ago. Paper is loaded. Also, need a password reset please. I changed it last week and now it doesn't work."
+    },
+    "triage": {
+     "ok": true,
+     "error": "",
+     "category": "Point of Sale",
+     "subcategory": "Receipt Printer",
+     "priority": "Medium",
+     "default_priority": "Medium",
+     "raise_rule": "customers_waiting",
+     "evidence": "The receipt printer on register 4 stopped printing about an hour ago",
+     "raise_check": "rejected: quote doesn't fit the rule",
+     "reason": "Receipt printer stopped working, and the person also needs a password reset."
+    },
+    "kb": {
+     "primary": {
+      "id": "KB-203",
+      "title": "Receipt printer not printing"
+     },
+     "related": [
+      {
+       "id": "KB-201",
+       "title": "Register won't boot or freezes",
+       "score": 0.732
+      },
+      {
+       "id": "KB-401",
+       "title": "Office printer or scanner problems",
+       "score": 0.703
+      }
+     ],
+     "needs_review": false,
+     "review_note": ""
+    },
+    "reply": "Hi Luis,\n\nPlease try the following:\n1. Check that the paper roll is loaded with the shiny side facing the print head.\n2. Open the cover and clear any jammed paper.\n3. Turn the printer off and on.\n\nWe will confirm the printer shows as connected in POS settings.\n\nIT Help Desk",
+    "reply_problems": [],
+    "needs_review": false,
+    "latency_s": 19.0,
+    "models": {
+     "classifier": "llama3.2:3b",
+     "reply": "qwen2.5:7b",
+     "embeddings": "nomic-embed-text"
+    },
+    "expected": {
+     "subcategory": "Receipt Printer",
+     "priority": "Medium"
+    }
+   }
+  },
+  {
+   "caption": "Whole site offline",
+   "result": {
+    "ticket": {
+     "ticket_id": "INC-10110",
+     "requester": "Priya Allen",
+     "role": "Store Manager",
+     "location": "Store 024",
+     "subject": "Internet down",
+     "description": "the internet is down for everyone here on and off all week. nothing will load."
+    },
+    "triage": {
+     "ok": true,
+     "error": "",
+     "category": "Network",
+     "subcategory": "Internet Outage",
+     "priority": "Urgent",
+     "default_priority": "Urgent",
+     "raise_rule": "several_people",
+     "evidence": "the internet is down for everyone here",
+     "raise_check": "accepted",
+     "reason": "Nothing will load, and the whole site is affected."
+    },
+    "kb": {
+     "primary": {
+      "id": "KB-502",
+      "title": "Site-wide internet outage"
+     },
+     "related": [
+      {
+       "id": "KB-402",
+       "title": "Slow or unresponsive computer",
+       "score": 0.667
+      },
+      {
+       "id": "KB-602",
+       "title": "Application crashing or showing errors",
+       "score": 0.663
+      }
+     ],
+     "needs_review": false,
+     "review_note": ""
+    },
+    "reply": "Hi Priya,\n\nThe internet is down for everyone in your store.\n\nPlease try:\n1. Check the lights on the modem and firewall.\n2. Restart the modem, then the firewall, then the switch, in that order.\n\nWe will contact the internet provider if the connection is still down.\n\nIT Help Desk",
+    "reply_problems": [],
+    "needs_review": false,
+    "latency_s": 16.43,
+    "models": {
+     "classifier": "llama3.2:3b",
+     "reply": "qwen2.5:7b",
+     "embeddings": "nomic-embed-text"
+    },
+    "expected": {
+     "subcategory": "Internet Outage",
+     "priority": "Urgent"
+    }
+   }
+  },
+  {
+   "caption": "Low priority by default",
+   "result": {
+    "ticket": {
+     "ticket_id": "INC-10165",
+     "requester": "Denise Williams",
+     "role": "Processor",
+     "location": "Donation Center D",
+     "subject": "Teams sign-in error",
+     "description": "Teams shows a blank white screen when I try to sign in."
+    },
+    "triage": {
+     "ok": true,
+     "error": "",
+     "category": "Email & Collaboration",
+     "subcategory": "Teams",
+     "priority": "Low",
+     "default_priority": "Low",
+     "raise_rule": "several_people",
+     "evidence": "Teams shows a blank white screen",
+     "raise_check": "rejected: quote doesn't fit the rule",
+     "reason": "Teams sign-in error; the person says they see a blank white screen."
+    },
+    "kb": {
+     "primary": {
+      "id": "KB-302",
+      "title": "Teams audio, video, or sign-in problems"
+     },
+     "related": [
+      {
+       "id": "KB-201",
+       "title": "Register won't boot or freezes",
+       "score": 0.698
+      },
+      {
+       "id": "KB-101",
+       "title": "Resetting a forgotten or expired password",
+       "score": 0.612
+      }
+     ],
+     "needs_review": false,
+     "review_note": ""
+    },
+    "reply": "Hi Denise,\n\nTeams is showing a blank white screen when you try to sign in.\n\nPlease try:\n1. Check your microphone and speaker in Teams settings under Devices.\n2. Sign out of Teams and sign back in.\n3. Restart Teams.\n\nWe will clear the Teams cache remotely if the problem continues.\n\nIT Help Desk",
+    "reply_problems": [],
+    "needs_review": false,
+    "latency_s": 16.37,
+    "models": {
+     "classifier": "llama3.2:3b",
+     "reply": "qwen2.5:7b",
+     "embeddings": "nomic-embed-text"
+    },
+    "expected": {
+     "subcategory": "Teams",
+     "priority": "Low"
+    }
+   }
+  },
+  {
+   "caption": "A ticket worded unlike the training data",
+   "result": {
+    "ticket": {
+     "ticket_id": "CUSTOM",
+     "requester": "Sam Rivera",
+     "role": "Retail Associate",
+     "location": "Store 001",
+     "subject": "Scanner broken",
+     "description": "Scan to email stopped working on the copier."
+    },
+    "triage": {
+     "ok": true,
+     "error": "",
+     "category": "Hardware",
+     "subcategory": "Peripherals",
+     "priority": "Low",
+     "default_priority": "Low",
+     "raise_rule": "none",
+     "evidence": "",
+     "raise_check": "",
+     "reason": "The scanner is broken, and it's a peripheral."
+    },
+    "kb": {
+     "primary": {
+      "id": "KB-403",
+      "title": "Mouse, keyboard, monitor, or dock issues"
+     },
+     "related": [
+      {
+       "id": "KB-401",
+       "title": "Office printer or scanner problems",
+       "score": 0.791
+      },
+      {
+       "id": "KB-203",
+       "title": "Receipt printer not printing",
+       "score": 0.676
+      }
+     ],
+     "needs_review": true,
+     "review_note": "Classified as Peripherals, but the KB search matched Printer/Scanner more closely."
+    },
+    "reply": "Hi Sam,\n\nScan to email stopped working on the copier.\n\nPlease try unplugging the scanner and plugging it into a different port.\n\nWe will send a replacement through the Hardware catalog item.\n\nIT Help Desk",
+    "reply_problems": [],
+    "needs_review": true,
+    "latency_s": 13.31,
+    "models": {
+     "classifier": "llama3.2:3b",
+     "reply": "qwen2.5:7b",
+     "embeddings": "nomic-embed-text"
+    },
+    "expected": null
+   }
+  }
+ ],
+ "models": [
+  "llama3.2:3b",
+  "nomic-embed-text",
+  "qwen2.5:7b"
+ ]
+}

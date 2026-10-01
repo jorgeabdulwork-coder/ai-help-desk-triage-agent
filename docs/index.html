@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Help Desk Triage Agent</title>
+<meta name="description" content="An AI agent that classifies IT help desk tickets, sets priority with verifiable rules, finds the knowledge base article, and drafts a reply for a human to review.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏷️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap">
+<style>/* AI Help Desk Triage Agent: shared styles for the live demo and the showcase page.
+   Priority colors appear only on triage tags, so color always means priority. */
+
+:root {
+  --bg: #EEF1F4;
+  --surface: #FFFFFF;
+  --ink: #1C2A3A;
+  --muted: #5D6B7A;
+  --line: #D5DCE3;
+  --focus: #2F6FB5;
+  --urgent: #C8102E;
+  --high: #D9661A;
+  --medium: #F2C230;
+  --low: #2E8B57;
+  --radius: 6px;
+  --font: "Archivo", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131B24; --surface: #1C2733; --ink: #E6ECF2; --muted: #9AA8B6; --line: #2E3B49; --focus: #7FB0E6;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131B24; --surface: #1C2733; --ink: #E6ECF2; --muted: #9AA8B6; --line: #2E3B49; --focus: #7FB0E6;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--font); font-size: 1rem; line-height: 1.55;
+  font-variant-numeric: tabular-nums;
+}
+img, svg { max-width: 100%; }
+a { color: inherit; text-underline-offset: 0.2em; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 3px; }
+
+.wrap { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; }
+.site-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.5rem 1.5rem; padding-block: 1.25rem; }
+.site-head .name { font-stretch: 112%; font-weight: 700; letter-spacing: -0.01em; text-decoration: none; }
+.site-head nav { display: flex; gap: 1.25rem; font-size: 0.95rem; color: var(--muted); }
+.site-head nav a { text-decoration: none; }
+.site-head nav a:hover { text-decoration: underline; }
+
+h1, h2, h3 { line-height: 1.12; margin: 0; letter-spacing: -0.015em; }
+h1 { font-size: clamp(2.2rem, 5.2vw, 3.8rem); font-stretch: 125%; font-weight: 800; }
+h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-stretch: 118%; font-weight: 750; margin-bottom: 0.5rem; }
+h3 { font-size: 1.05rem; font-weight: 700; }
+.lede { font-size: 1.15rem; color: var(--muted); max-width: 38rem; margin: 1rem 0 0; }
+.muted { color: var(--muted); }
+section { padding: 3.5rem 0; }
+section > .wrap > p.intro { max-width: 40rem; color: var(--muted); margin: 0 0 2rem; }
+
+/* ---------- raw ticket, as the employee typed it ---------- */
+.raw-ticket {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.1rem 1.25rem; max-width: 30rem;
+}
+.raw-ticket .from { font-size: 0.85rem; color: var(--muted); margin: 0 0 0.6rem; }
+.raw-ticket .subject { font-weight: 700; margin: 0 0 0.25rem; }
+.raw-ticket .body { margin: 0; }
+
+/* ---------- the triage tag ---------- */
+/* The shadow sits on a wrapper, because the tag's clipped corners would clip its own shadow. */
+.tag-wrap { width: 100%; max-width: 21rem; filter: drop-shadow(0 1px 1px rgba(28, 42, 58, 0.18)) drop-shadow(0 8px 18px rgba(28, 42, 58, 0.14)); }
+.tag {
+  position: relative; background: var(--surface); color: var(--ink);
+  border-radius: 0 0 var(--radius) var(--radius);
+  clip-path: polygon(14% 0, 86% 0, 100% 9%, 100% 100%, 0 100%, 0 9%);
+}
+.tag::before { /* the punched hole */
+  content: ""; position: absolute; top: 0.9rem; left: 50%; width: 0.85rem; height: 0.85rem;
+  transform: translateX(-50%); border-radius: 50%; background: var(--bg);
+  box-shadow: inset 0 0 0 2px var(--line);
+}
+.tag__body { padding: 2.4rem 1.4rem 1.1rem; }
+.tag__id { font-size: 0.85rem; color: var(--muted); margin: 0; }
+.tag__sub { font-size: 1.6rem; font-stretch: 115%; font-weight: 800; margin: 0.15rem 0 0; line-height: 1.1; }
+.tag__cat { margin: 0.1rem 0 1rem; color: var(--muted); }
+.tag dl { margin: 0; display: grid; gap: 0.45rem; font-size: 0.92rem; }
+.tag dt { color: var(--muted); font-size: 0.82rem; }
+.tag dd { margin: 0; }
+.tag__flag { margin: 1rem 0 0; padding: 0.55rem 0.7rem; border-radius: var(--radius); font-size: 0.88rem;
+  background: color-mix(in srgb, var(--urgent) 9%, var(--surface)); border-left: 3px solid var(--urgent); }
+.tag__strip {
+  position: relative; border-top: 2px dashed color-mix(in srgb, var(--ink) 30%, transparent);
+  padding: 0.85rem 1.4rem 1rem; color: #fff;
+}
+.tag__strip .p { display: block; font-size: 1.7rem; font-weight: 800; font-stretch: 125%; line-height: 1; }
+.tag__strip .why { display: block; font-size: 0.85rem; margin-top: 0.3rem; opacity: 0.95; }
+.tag--urgent .tag__strip { background: var(--urgent); }
+.tag--high .tag__strip { background: var(--high); }
+.tag--medium .tag__strip { background: var(--medium); color: #1C2A3A; }
+.tag--low .tag__strip { background: var(--low); }
+
+/* ---------- hero ---------- */
+.hero { padding: 2.5rem 0 4rem; }
+.hero__flow { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 21rem); gap: 1.5rem;
+  align-items: center; margin-top: 2.75rem; }
+.hero__arrow { color: var(--muted); font-size: 0.9rem; text-align: center; max-width: 9rem; }
+.hero__arrow svg { display: block; margin: 0 auto 0.4rem; }
+.hero .tag-wrap { animation: settle 700ms cubic-bezier(.2,.8,.2,1) 250ms both; }
+@keyframes settle { from { opacity: 0; transform: translateY(-14px) rotate(-3deg); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .hero .tag-wrap { animation: none; } }
+
+/* ---------- result detail: used by the showcase and the demo ---------- */
+.detail { display: grid; grid-template-columns: minmax(0, 21rem) minmax(0, 1fr); gap: 2rem; align-items: start; }
+.detail__panels { display: grid; gap: 1.5rem; min-width: 0; }
+.panel h3 { margin-bottom: 0.6rem; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; counter-reset: step; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 1.8rem 1fr; gap: 0.5rem; font-size: 0.95rem; }
+.steps li::before { content: counter(step); width: 1.5rem; height: 1.5rem; border-radius: 50%;
+  border: 1.5px solid var(--muted); color: var(--muted); font-size: 0.78rem; font-weight: 700;
+  display: grid; place-items: center; margin-top: 0.1rem; }
+.steps q { quotes: "\201C" "\201D"; font-style: italic; }
+.ok { color: var(--low); font-weight: 700; }
+.no { color: var(--urgent); font-weight: 700; }
+.kb-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+.kb-list li { display: grid; grid-template-columns: 4.6rem 1fr auto; gap: 0.75rem; align-items: baseline; font-size: 0.95rem; }
+.kb-list .id { color: var(--muted); font-size: 0.85rem; }
+.kb-list .used { font-weight: 700; }
+.kb-list .score { color: var(--muted); font-size: 0.82rem; }
+.letter { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.1rem 1.25rem; white-space: pre-wrap; font-family: inherit; font-size: 0.97rem; max-width: 38rem; margin: 0; }
+.problems { margin: 0.6rem 0 0; padding-left: 1.1rem; color: var(--urgent); font-size: 0.92rem; }
+.meta { font-size: 0.85rem; color: var(--muted); margin: 0; }
+.expected { font-size: 0.88rem; margin: 0.75rem 0 0; }
+
+/* ---------- showcase: example picker ---------- */
+.picker { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 2rem; align-items: start; }
+.picker__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.25rem; position: sticky; top: 1rem; }
+.picker__list button {
+  width: 100%; text-align: left; font: inherit; color: inherit; background: none; cursor: pointer;
+  border: 1px solid transparent; border-radius: var(--radius); padding: 0.55rem 0.7rem 0.55rem 0.85rem;
+  display: grid; grid-template-columns: 0.6rem 1fr; gap: 0.6rem; align-items: baseline;
+}
+.picker__list button:hover { background: var(--surface); }
+.picker__list button[aria-pressed="true"] { background: var(--surface); border-color: var(--line); }
+.picker__list .dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; transform: translateY(0.05rem); }
+.picker__list .s { font-weight: 600; display: block; line-height: 1.3; }
+.picker__list .w { font-size: 0.82rem; color: var(--muted); display: block; }
+.dot--urgent { background: var(--urgent); } .dot--high { background: var(--high); }
+.dot--medium { background: var(--medium); } .dot--low { background: var(--low); }
+.picker__raw { margin-bottom: 1.75rem; }
+
+/* ---------- journey timeline ---------- */
+.journey { list-style: none; margin: 0; padding: 0; max-width: 46rem; }
+.journey li { display: grid; grid-template-columns: 8.5rem 1fr; gap: 1.25rem; padding: 1rem 0; border-top: 1px solid var(--line); }
+.journey .v { font-weight: 700; }
+.journey .m { display: block; font-size: 0.82rem; color: var(--muted); font-weight: 400; }
+.bar { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.35rem; }
+.bar__track { flex: 1; height: 0.6rem; background: color-mix(in srgb, var(--ink) 9%, transparent); border-radius: 3px; overflow: hidden; }
+.bar__fill { height: 100%; background: var(--ink); border-radius: 3px; }
+.journey li.final .bar__fill { background: var(--focus); }
+.bar__n { font-weight: 700; min-width: 3.5rem; text-align: right; }
+.journey p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+/* ---------- lessons ---------- */
+.lessons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 3rem; max-width: 62rem; }
+.lessons p { margin: 0.4rem 0 0; color: var(--muted); }
+
+footer { padding: 2.5rem 0 3rem; color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--line); }
+
+/* ---------- live demo form ---------- */
+.wrap--wide { max-width: 86rem; }
+.demo { display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); gap: 3rem; align-items: start; padding-block: 1rem 4rem; }
+.form { display: grid; gap: 0.9rem; }
+.form label { display: grid; gap: 0.3rem; font-size: 0.9rem; font-weight: 600; }
+.form input, .form textarea {
+  font: inherit; font-weight: 400; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 0.6rem 0.7rem; width: 100%;
+}
+.form textarea { min-height: 7rem; resize: vertical; }
+.form .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.btn { font: inherit; font-weight: 700; cursor: pointer; border-radius: var(--radius); padding: 0.7rem 1.1rem;
+  border: 1.5px solid var(--ink); background: var(--ink); color: var(--bg); }
+.btn:disabled { opacity: 0.6; cursor: progress; }
+.btn--quiet { background: none; color: var(--ink); font-weight: 600; padding: 0.4rem 0.7rem; font-size: 0.88rem; }
+.samples { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.status { min-height: 1.5rem; font-size: 0.92rem; color: var(--muted); margin: 0; }
+.status.error { color: var(--urgent); }
+.empty { border: 1.5px dashed var(--line); border-radius: var(--radius); padding: 2.5rem 1.5rem; color: var(--muted); text-align: center; }
+
+@media (max-width: 1180px) { .demo .detail { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 860px) {
+  .hero__flow, .detail, .picker, .demo { grid-template-columns: minmax(0, 1fr); }
+  .hero__arrow { max-width: none; display: flex; gap: 0.5rem; align-items: center; justify-content: center; }
+  .hero__arrow svg { transform: rotate(90deg); margin: 0; }
+  .picker__list { position: static; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
+  .lessons { grid-template-columns: minmax(0, 1fr); }
+  .journey li { grid-template-columns: minmax(0, 1fr); gap: 0.4rem; }
+  .tag-wrap { max-width: 24rem; }
+  .site-head nav { gap: 1rem; font-size: 0.9rem; }
+}
+@media (max-width: 480px) { .form .row { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body>
+<header class="wrap site-head">
+  <a class="name" href="#top">AI Help Desk Triage Agent</a>
+  <nav><a href="#examples">Examples</a><a href="#results">Results</a><a href="#lessons">Lessons</a><a href="https://github.com/jorgeabdulwork-coder/ai-help-desk-triage-agent">Code on GitHub</a></nav>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <h1>AI Help Desk Triage Agent</h1>
+      <p class="lede">It reads an IT ticket the way an employee wrote it, works out what the problem is and how urgent it is, finds the right knowledge base article, and drafts a reply for a human agent to check. It runs entirely on free, local AI models.</p>
+      <div class="hero__flow" id="hero"></div>
+    </div>
+  </section>
+
+  <section id="examples">
+    <div class="wrap">
+      <h2>Real tickets, real output</h2>
+      <p class="intro">Each example below is the agent's actual output, chosen to show a different situation: impact buried in the text, a vague subject, two problems in one ticket, and a misclassification the agent caught itself.</p>
+      <div class="picker">
+        <ul class="picker__list" id="picker"></ul>
+        <div id="pick-detail" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="results">
+    <div class="wrap">
+      <h2>How it got to 97%</h2>
+      <p class="intro">Share of tickets with both the problem type and the priority correct, on 200 held-out tickets. Each version changed one thing based on what the previous evaluation showed. The last line is a fresh set generated after tuning ended, so it measures tickets no version had seen.</p>
+      <ol class="journey" id="journey"></ol>
+    </div>
+  </section>
+
+  <section id="lessons">
+    <div class="wrap">
+      <h2>What I learned</h2>
+      <div class="lessons" id="lesson-list"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p style="margin:0">Built by Jorge Abdul Hernandez. All tickets are synthetic: no real organizational or employee data. Models run locally with Ollama (llama3.2:3b, nomic-embed-text, qwen2.5:7b). Page generated October 1, 2026.</p>
+  </div>
+</footer>
+
+<script>/* Renders an agent result (from triage/serialize.py) as a triage tag plus detail panels.
+   Shared by the live demo (web/demo.html) and the showcase page (docs/index.html). */
+(function () {
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  const RULES = {
+    several_people: "several people are affected",
+    customers_waiting: "customers are waiting",
+    cannot_work: "the person can't work at all",
+  };
+
+  function reviewReasons(d) {
+    const reasons = [];
+    if (d.kb && d.kb.needs_review) reasons.push(d.kb.review_note);
+    (d.reply_problems || []).forEach((p) => reasons.push("The draft reply " + p + "."));
+    return reasons;
+  }
+
+  function tag(d, opts = {}) {
+    const t = d.triage;
+    const p = (t.priority || "").toLowerCase();
+    const raised = t.raise_check === "accepted";
+    const why = raised ? `Raised from ${t.default_priority}: ${RULES[t.raise_rule] || t.raise_rule}`
+                       : `Normal priority for ${t.subcategory}`;
+    const reasons = reviewReasons(d);
+    const flag = reasons.length
+      ? `<p class="tag__flag"><strong>Check before sending.</strong> ${esc(reasons[0])}</p>` : "";
+    const kb = d.kb ? `<div><dt>KB article</dt><dd>${esc(d.kb.primary.id)} ${esc(d.kb.primary.title)}</dd></div>` : "";
+    return `<div class="tag-wrap">
+      <article class="tag tag--${esc(p)}" aria-label="Triage result: ${esc(t.subcategory)}, ${esc(t.priority)} priority">
+        <div class="tag__body">
+          <p class="tag__id">${esc(d.ticket.ticket_id)}</p>
+          <h3 class="tag__sub">${esc(t.subcategory)}</h3>
+          <p class="tag__cat">${esc(t.category)}</p>
+          <dl>
+            ${kb}
+            <div><dt>From</dt><dd>${esc(d.ticket.requester)}, ${esc(d.ticket.role)}, ${esc(d.ticket.location)}</dd></div>
+          </dl>
+          ${opts.noFlag ? "" : flag}
+        </div>
+        <div class="tag__strip"><span class="p">${esc(t.priority)}</span><span class="why">${esc(why)}</span></div>
+      </article></div>`;
+  }
+
+  function steps(d) {
+    const t = d.triage;
+    let raise;
+    if (!t.raise_rule || t.raise_rule === "none") {
+      raise = "The AI found no sign of wider impact, so the normal priority stands.";
+    } else {
+      const claim = `The AI said ${esc(RULES[t.raise_rule] || t.raise_rule)} and quoted <q>${esc(t.evidence)}</q>.`;
+      if (t.raise_check === "accepted") {
+        raise = `${claim} <span class="ok">Accepted:</span> the quote is in the ticket and shows wider impact, so priority goes up one level.`;
+      } else if ((t.raise_check || "").includes("not in ticket")) {
+        raise = `${claim} <span class="no">Rejected:</span> those words aren't in the ticket.`;
+      } else {
+        raise = `${claim} <span class="no">Rejected:</span> the quote doesn't show wider impact.`;
+      }
+    }
+    return `
+      <ol class="steps">
+        <li><span>The AI read the ticket: <strong>${esc(t.subcategory)}</strong>. <span class="muted">${esc(t.reason)}</span></span></li>
+        <li><span>The code looked up the normal priority for ${esc(t.subcategory)}: <strong>${esc(t.default_priority)}</strong>.</span></li>
+        <li><span>${raise}</span></li>
+        <li><span>Final priority: <strong>${esc(t.priority)}</strong>.</span></li>
+      </ol>`;
+  }
+
+  function kbList(d) {
+    if (!d.kb) return "";
+    const rows = [`<li><span class="id">${esc(d.kb.primary.id)}</span><span class="used">${esc(d.kb.primary.title)}</span><span class="score">used for the reply</span></li>`];
+    d.kb.related.forEach((a) => rows.push(
+      `<li><span class="id">${esc(a.id)}</span><span>${esc(a.title)}</span><span class="score">${Math.round(a.score * 100)}% similar</span></li>`));
+    return `<ul class="kb-list">${rows.join("")}</ul>`;
+  }
+
+  function detail(d, opts = {}) {
+    if (!d.triage.ok) {
+      return `<p class="status error">The classifier couldn't produce a valid answer: ${esc(d.triage.error)}</p>`;
+    }
+    // The tag already shows the first review reason; list only the reply's own problems here.
+    const replyProblems = (d.reply_problems || []).map((p) => "The draft reply " + p + ".");
+    const problems = replyProblems.length
+      ? `<ul class="problems">${replyProblems.map((r) => `<li>${esc(r)}</li>`).join("")}</ul>` : "";
+    let expected = "";
+    if (d.expected) {
+      const right = d.expected.subcategory === d.triage.subcategory && d.expected.priority === d.triage.priority;
+      expected = `<p class="expected">${right ? '<span class="ok">Matches</span>' : '<span class="no">Differs from</span>'} the correct answer in the dataset: ${esc(d.expected.subcategory)}, ${esc(d.expected.priority)}.</p>`;
+    }
+    const models = d.models.classifier === d.models.reply
+      ? `${esc(d.models.classifier)}` : `${esc(d.models.classifier)} classified, ${esc(d.models.reply)} wrote the reply`;
+    return `
+      <div class="detail">
+        <div>${tag(d)}${expected}</div>
+        <div class="detail__panels">
+          <div class="panel"><h3>How the priority was set</h3>${steps(d)}</div>
+          <div class="panel"><h3>Knowledge base</h3>${kbList(d)}</div>
+          <div class="panel"><h3>Draft reply for the agent to review</h3><pre class="letter">${esc(d.reply)}</pre>${problems}</div>
+          <p class="meta">Models: ${models}. Took ${Number(d.latency_s).toFixed(1)} seconds.</p>
+        </div>
+      </div>`;
+  }
+
+  function rawTicket(tk) {
+    return `
+      <div class="raw-ticket">
+        <p class="from">${esc(tk.ticket_id)} from ${esc(tk.requester)}, ${esc(tk.location)}</p>
+        <p class="subject">${esc(tk.subject)}</p>
+        <p class="body">${esc(tk.description)}</p>
+      </div>`;
+  }
+
+  window.Triage = { esc, tag, detail, rawTicket };
+})();
+</script>
+<script>
+  const DATA = {"hero": {"ticket": {"ticket_id": "INC-10349", "requester": "Sofia Jackson", "role": "Cashier", "location": "Store 010", "subject": "Issue", "description": "my desktop won't connect to the wi-fi since we opened. several of us are having the same problem."}, "triage": {"ok": true, "error": "", "category": "Network", "subcategory": "Wi-Fi", "priority": "High", "default_priority": "Medium", "raise_rule": "several_people", "evidence": "several of us are having the same problem", "raise_check": "accepted", "reason": "Multiple people are having wireless problems; the ticket says several of us are affected."}, "kb": {"primary": {"id": "KB-501", "title": "Wi-Fi connection problems"}, "related": [{"id": "KB-301", "title": "Outlook won't open or sync", "score": 0.687}, {"id": "KB-503", "title": "VPN won't connect", "score": 0.677}], "needs_review": false, "review_note": ""}, "reply": "Hi Sofia,\n\nYour desktop won't connect to the Wi-Fi since we opened. Please try forgetting the Wi-Fi network and joining it again. Make sure you are on the correct work network.\n\nWe will check the access point if several devices are affected.\n\nIT Help Desk", "reply_problems": [], "needs_review": false, "latency_s": 15.66, "models": {"classifier": "llama3.2:3b", "reply": "qwen2.5:7b", "embeddings": "nomic-embed-text"}, "expected": {"subcategory": "Wi-Fi", "priority": "High"}}, "examples": [{"caption": "Customers waiting at the register", "result": {"ticket": {"ticket_id": "INC-10118", "requester": "Omar White", "role": "Retail Associate", "location": "Store 018", "subject": "Card reader not connected", "description": "The payment terminal on register 2 says 'device not connected'. We have a line of customers waiting."}, "triage": {"ok": true, "error": "", "category": "Point of Sale", "subcategory": "Card Reader", "priority": "Urgent", "default_priority": "High", "raise_rule": "customers_waiting", "evidence": "We have a line of customers waiting", "raise_check": "accepted", "reason": "The card reader is not connected; customers are waiting."}, "kb": {"primary": {"id": "KB-202", "title": "Card reader not accepting payments"}, "related": [{"id": "KB-201", "title": "Register won't boot or freezes", "score": 0.724}, {"id": "KB-203", "title": "Receipt printer not printing", "score": 0.681}], "needs_review": false, "review_note": ""}, "reply": "Hi Omar,\n\nThe payment terminal says 'device not connected'. Please try:\n1. Unplug the card reader cable and plug it back in.\n2. Restart the payment app.\n3. Run a test transaction.\n\nWe will contact the payment processor if the backup reader also fails.\n\nIT Help Desk", "reply_problems": [], "needs_review": false, "latency_s": 16.29, "models": {"classifier": "llama3.2:3b", "reply": "qwen2.5:7b", "embeddings": "nomic-embed-text"}, "expected": {"subcategory": "Card Reader", "priority": "Urgent"}}}, {"caption": "Vague subject, impact buried at the end", "result": {"ticket": {"ticket_id": "INC-10349", "requester": "Sofia Jackson", "role": "Cashier", "location": "Store 010", "subject": "Issue", "description": "my desktop won't connect to the wi-fi since we opened. several of us are having the same problem."}, "triage": {"ok": true, "error": "", "category": "Network", "subcategory": "Wi-Fi", "priority": "High", "default_priority": "Medium", "raise_rule": "several_people", "evidence": "several of us are having the same problem", "raise_check": "accepted", "reason": "Multiple people are having wireless problems; the ticket says several of us are affected."}, "kb": {"primary": {"id": "KB-501", "title": "Wi-Fi connection problems"}, "related": [{"id": "KB-301", "title": "Outlook won't open or sync", "score": 0.687}, {"id": "KB-503", "title": "VPN won't connect", "score": 0.677}], "needs_review": false, "review_note": ""}, "reply": "Hi Sofia,\n\nYour desktop won't connect to the Wi-Fi since we opened. Please try forgetting the Wi-Fi network and joining it again. Make sure you are on the correct work network.\n\nWe will check the access point if several devices are affected.\n\nIT Help Desk", "reply_problems": [], "needs_review": false, "latency_s": 15.66, "models": {"classifier": "llama3.2:3b", "reply": "qwen2.5:7b", "embeddings": "nomic-embed-text"}, "expected": {"subcategory": "Wi-Fi", "priority": "High"}}}, {"caption": "Repeated lockouts, but only one person", "result": {"ticket": {"ticket_id": "INC-10029", "requester": "Elena Martinez", "role": "Retail Associate", "location": "Store 019", "subject": "Account locked again", "description": "I keep getting locked out even after it gets unlocked. It happened again on and off all week."}, "triage": {"ok": true, "error": "", "category": "Access & Accounts", "subcategory": "Account Locked", "priority": "Medium", "default_priority": "Medium", "raise_rule": "several_people", "evidence": "I keep getting locked out even after it gets unlocked", "raise_check": "rejected: quote doesn't fit the rule", "reason": "The account is locked out repeatedly; the person says it happens on and off all week."}, "kb": {"primary": {"id": "KB-102", "title": "Unlocking a locked-out account"}, "related": [{"id": "KB-101", "title": "Resetting a forgotten or expired password", "score": 0.672}, {"id": "KB-201", "title": "Register won't boot or freezes", "score": 0.625}], "needs_review": false, "review_note": ""}, "reply": "Hi Elena,\n\nPlease try: Wait 15 minutes before trying again.\nPlease try: Sign out of email on your phone and other devices that may have an old password saved.\n\nWe will confirm your identity and unlock the account, then find the device that keeps sending the old password.\n\nIT Help Desk", "reply_problems": [], "needs_review": false, "latency_s": 18.34, "models": {"classifier": "llama3.2:3b", "reply": "qwen2.5:7b", "embeddings": "nomic-embed-text"}, "expected": {"subcategory": "Account Locked", "priority": "Medium"}}}, {"caption": "Expired password, unhelpful subject", "result": {"ticket": {"ticket_id": "INC-10026", "requester": "Marcus Rodriguez", "role": "Processor", "location": "Donation Center B", "subject": "Issue", "description": "My password expired about an hour ago and now I can't sign in to anything. Can someone reset it?"}, "triage": {"ok": true, "error": "", "category": "Access & Accounts", "subcategory": "Password Reset", "priority": "Medium", "default_priority": "Medium", "raise_rule": "several_people", "evidence": "My password expired about an hour ago", "raise_check": "rejected: quote doesn't fit the rule", "reason": "A forgotten password is a password reset problem."}, "kb": {"primary": {"id": "KB-101", "title": "Resetting a forgotten or expired password"}, "related": [{"id": "KB-102", "title": "Unlocking a locked-out account", "score": 0.692}, {"id": "KB-201", "title": "Register won't boot or freezes", "score": 0.669}], "needs_review": false, "review_note": ""}, "reply": "Hi Marcus,\n\nWe will verify your identity and reset your password. Please try checking that Caps Lock is off if you think you may be mistyping it.\n\nIT Help Desk", "reply_problems": [], "needs_review": false, "latency_s": 14.78, "models": {"classifier": "llama3.2:3b", "reply": "qwen2.5:7b", "embeddings": "nomic-embed-text"}, "expected": {"subcategory": "Password Reset", "priority": "Medium"}}}, {"caption": "Two problems in one ticket", "result": {"ticket": {"ticket_id": "INC-10091", "requester": "Luis Allen", "role": "Retail Associate", "location": "Store 017", "subject": "No receipts coming out", "description": "The receipt printer on register 4 stopped printing about an hour ago. Paper is loaded. Also, need a password reset please. I changed it last week and now it doesn't work."}, "triage": {"ok": true, "error": "", "category": "Point of Sale", "subcategory": "Receipt Printer", "priority": "Medium", "default_priority": "Medium", "raise_rule": "customers_waiting", "evidence": "The receipt printer on register 4 stopped printing about an hour ago", "raise_check": "rejected: quote doesn't fit the rule", "reason": "Receipt printer stopped working, and the person also needs a password reset."}, "kb": {"primary": {"id": "KB-203", "title": "Receipt printer not printing"}, "related": [{"id": "KB-201", "title": "Register won't boot or freezes", "score": 0.732}, {"id": "KB-401", "title": "Office printer or scanner problems", "score": 0.703}], "needs_review": false, "review_note": ""}, "reply": "Hi Luis,\n\nPlease try the following:\n1. Check that the paper roll is loaded with the shiny side facing the print head.\n2. Open the cover and clear any jammed paper.\n3. Turn the printer off and on.\n\nWe will confirm the printer shows as connected in POS settings.\n\nIT Help Desk", "reply_problems": [], "needs_review": false, "latency_s": 19.0, "models": {"classifier": "llama3.2:3b", "reply": "qwen2.5:7b", "embeddings": "nomic-embed-text"}, "expected": {"subcategory": "Receipt Printer", "priority": "Medium"}}}, {"caption": "Whole site offline", "result": {"ticket": {"ticket_id": "INC-10110", "requester": "Priya Allen", "role": "Store Manager", "location": "Store 024", "subject": "Internet down", "description": "the internet is down for everyone here on and off all week. nothing will load."}, "triage": {"ok": true, "error": "", "category": "Network", "subcategory": "Internet Outage", "priority": "Urgent", "default_priority": "Urgent", "raise_rule": "several_people", "evidence": "the internet is down for everyone here", "raise_check": "accepted", "reason": "Nothing will load, and the whole site is affected."}, "kb": {"primary": {"id": "KB-502", "title": "Site-wide internet outage"}, "related": [{"id": "KB-402", "title": "Slow or unresponsive computer", "score": 0.667}, {"id": "KB-602", "title": "Application crashing or showing errors", "score": 0.663}], "needs_review": false, "review_note": ""}, "reply": "Hi Priya,\n\nThe internet is down for everyone in your store.\n\nPlease try:\n1. Check the lights on the modem and firewall.\n2. Restart the modem, then the firewall, then the switch, in that order.\n\nWe will contact the internet provider if the connection is still down.\n\nIT Help Desk", "reply_problems": [], "needs_review": false, "latency_s": 16.43, "models": {"classifier": "llama3.2:3b", "reply": "qwen2.5:7b", "embeddings": "nomic-embed-text"}, "expected": {"subcategory": "Internet Outage", "priority": "Urgent"}}}, {"caption": "Low priority by default", "result": {"ticket": {"ticket_id": "INC-10165", "requester": "Denise Williams", "role": "Processor", "location": "Donation Center D", "subject": "Teams sign-in error", "description": "Teams shows a blank white screen when I try to sign in."}, "triage": {"ok": true, "error": "", "category": "Email & Collaboration", "subcategory": "Teams", "priority": "Low", "default_priority": "Low", "raise_rule": "several_people", "evidence": "Teams shows a blank white screen", "raise_check": "rejected: quote doesn't fit the rule", "reason": "Teams sign-in error; the person says they see a blank white screen."}, "kb": {"primary": {"id": "KB-302", "title": "Teams audio, video, or sign-in problems"}, "related": [{"id": "KB-201", "title": "Register won't boot or freezes", "score": 0.698}, {"id": "KB-101", "title": "Resetting a forgotten or expired password", "score": 0.612}], "needs_review": false, "review_note": ""}, "reply": "Hi Denise,\n\nTeams is showing a blank white screen when you try to sign in.\n\nPlease try:\n1. Check your microphone and speaker in Teams settings under Devices.\n2. Sign out of Teams and sign back in.\n3. Restart Teams.\n\nWe will clear the Teams cache remotely if the problem continues.\n\nIT Help Desk", "reply_problems": [], "needs_review": false, "latency_s": 16.37, "models": {"classifier": "llama3.2:3b", "reply": "qwen2.5:7b", "embeddings": "nomic-embed-text"}, "expected": {"subcategory": "Teams", "priority": "Low"}}}, {"caption": "A ticket worded unlike the training data", "result": {"ticket": {"ticket_id": "CUSTOM", "requester": "Sam Rivera", "role": "Retail Associate", "location": "Store 001", "subject": "Scanner broken", "description": "Scan to email stopped working on the copier."}, "triage": {"ok": true, "error": "", "category": "Hardware", "subcategory": "Peripherals", "priority": "Low", "default_priority": "Low", "raise_rule": "none", "evidence": "", "raise_check": "", "reason": "The scanner is broken, and it's a peripheral."}, "kb": {"primary": {"id": "KB-403", "title": "Mouse, keyboard, monitor, or dock issues"}, "related": [{"id": "KB-401", "title": "Office printer or scanner problems", "score": 0.791}, {"id": "KB-203", "title": "Receipt printer not printing", "score": 0.676}], "needs_review": true, "review_note": "Classified as Peripherals, but the KB search matched Printer/Scanner more closely."}, "reply": "Hi Sam,\n\nScan to email stopped working on the copier.\n\nPlease try unplugging the scanner and plugging it into a different port.\n\nWe will send a replacement through the Hardware catalog item.\n\nIT Help Desk", "reply_problems": [], "needs_review": true, "latency_s": 13.31, "models": {"classifier": "llama3.2:3b", "reply": "qwen2.5:7b", "embeddings": "nomic-embed-text"}, "expected": null}}], "models": ["llama3.2:3b", "nomic-embed-text", "qwen2.5:7b"], "journey": [{"version": "v1", "model": "Llama 3.2 3B", "fully_correct": 59.0, "note": "First prompt. Strong at naming the problem, but it raised priority for invented reasons, such as a store being involved."}, {"version": "v2", "model": "Llama 3.2 3B", "fully_correct": 83.0, "note": "A normal priority for each problem type, like an SLA matrix, and explicit rules for when to raise it."}, {"version": "v3", "model": "Llama 3.2 3B", "fully_correct": 69.5, "note": "The AI now quotes evidence and code sets the priority. The small model quoted irrelevant sentences as proof, so it got worse."}, {"version": "v3", "model": "Qwen 2.5 7B", "fully_correct": 89.0, "note": "The same design on a larger model gave the best result so far, with no ticket set too low."}, {"version": "v4", "model": "Llama 3.2 3B", "fully_correct": 94.5, "note": "Code also checks that the quote shows wider impact. The small model recovers, at about half the time per ticket."}, {"version": "v4", "model": "Qwen 2.5 7B", "fully_correct": 98.0, "note": "Best score on the evaluation set used for tuning."}, {"version": "Final", "model": "Qwen 2.5 7B, unseen tickets", "fully_correct": 97.0, "final": true, "note": "A fresh set generated after tuning ended. Close to 98%, so the rules generalized rather than memorizing tickets."}], "lessons": [{"title": "Let code apply the rules", "text": "The AI reads the ticket; plain code applies the priority matrix. Splitting the work took fully correct answers from 59% to 97%."}, {"title": "Make the AI show its evidence", "text": "A priority raise needs a quote from the ticket that the code can verify, which stopped the AI from inventing impact like \"the whole store is down.\""}, {"title": "Check the checker", "text": "An AI judge graded the drafted replies, but most of its \"invented content\" flags were wrong. Verifying its quotes moved measured accuracy from 63% to about 97%."}, {"title": "The knowledge base sets the ceiling", "text": "Replies are only as good as the articles behind them. Labeling steps by situation worked better than any prompt instruction."}]};
+  const T = window.Triage;
+
+  // Hero: the raw ticket, then its tag.
+  const h = DATA.hero;
+  document.getElementById("hero").innerHTML = `
+    ${T.rawTicket(h.ticket)}
+    <div class="hero__arrow" aria-hidden="true">
+      <svg width="56" height="16" viewBox="0 0 56 16"><path d="M0 8h52M44 1l8 7-8 7" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      <span>${Math.max(1, Math.round(h.latency_s))} seconds later</span>
+    </div>
+    ${T.tag(h, { noFlag: true })}`;
+
+  // Example picker.
+  const list = document.getElementById("picker"), pane = document.getElementById("pick-detail");
+  list.innerHTML = DATA.examples.map((e, i) => `
+    <li><button type="button" data-i="${i}" aria-pressed="false">
+      <span class="dot dot--${T.esc((e.result.triage.priority || "").toLowerCase())}" aria-hidden="true"></span>
+      <span><span class="s">${T.esc(e.result.ticket.subject)}</span><span class="w">${T.esc(e.caption)}</span></span>
+    </button></li>`).join("");
+  function show(i) {
+    list.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.i === i)));
+    const e = DATA.examples[i];
+    pane.innerHTML = `<div class="picker__raw">${T.rawTicket(e.result.ticket)}</div>${T.detail(e.result)}`;
+  }
+  list.addEventListener("click", (ev) => { const b = ev.target.closest("button"); if (b) show(+b.dataset.i); });
+  show(0);
+
+  // Results journey.
+  document.getElementById("journey").innerHTML = DATA.journey.map((j) => `
+    <li class="${j.final ? "final" : ""}">
+      <span class="v">${T.esc(j.version)}<span class="m">${T.esc(j.model)}</span></span>
+      <div>
+        <div class="bar"><div class="bar__track"><div class="bar__fill" style="width:${j.fully_correct}%"></div></div>
+          <span class="bar__n">${j.fully_correct.toFixed(1)}%</span></div>
+        <p>${T.esc(j.note)}</p>
+      </div>
+    </li>`).join("");
+
+  document.getElementById("lesson-list").innerHTML = DATA.lessons.map((l) =>
+    `<div><h3>${T.esc(l.title)}</h3><p>${T.esc(l.text)}</p></div>`).join("");
+</script>
+</body>
+</html>

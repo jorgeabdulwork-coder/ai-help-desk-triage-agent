@@ -1,0 +1,7 @@
+date,label,model,prompt_version,tickets,subcategory_acc,priority_acc,fully_correct,invalid_rate,over_prioritized,under_prioritized,avg_latency_s
+2026-09-29 10:46,baseline,llama3.2:3b,v2,200,0.95,0.85,0.83,0.0,24,6,6.05
+2026-09-29 11:28,v3-llama,llama3.2:3b,v3,200,0.945,0.705,0.695,0.0,58,1,7.02
+2026-09-29 12:08,v3-qwen,qwen2.5:7b,v3,200,0.955,0.89,0.89,0.0,22,0,11.44
+2026-09-29 12:48,v4-llama,llama3.2:3b,v4,200,0.955,0.96,0.945,0.0,5,3,6.99
+2026-09-29 13:48,v4-qwen,qwen2.5:7b,v4,200,0.985,0.985,0.98,0.0,2,1,17.66
+2026-09-29 14:28,final-qwen,qwen2.5:7b,v4,200,0.995,0.97,0.97,0.0,1,5,11.78

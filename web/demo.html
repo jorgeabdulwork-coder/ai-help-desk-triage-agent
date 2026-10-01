@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Live demo: AI Help Desk Triage Agent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="wrap wrap--wide site-head">
+  <span class="name">AI Help Desk Triage Agent</span>
+  <nav><span>Live demo, running on this computer</span></nav>
+</header>
+<main class="wrap wrap--wide demo">
+  <div>
+    <h1 style="font-size:clamp(1.8rem,3.4vw,2.4rem)">Submit a ticket</h1>
+    <p class="muted">Write it the way an employee would. The agent classifies it, sets the priority, picks a KB article, and drafts a reply.</p>
+    <p class="meta" style="margin:1rem 0 0.4rem">Load an example</p>
+    <div class="samples" id="samples"></div>
+    <form class="form" id="form" style="margin-top:1.25rem">
+      <label>Subject <input name="subject" required autocomplete="off"></label>
+      <label>Description <textarea name="description" required></textarea></label>
+      <div class="row">
+        <label>Name <input name="requester" value="Sam Rivera"></label>
+        <label>Role <input name="role" value="Retail Associate"></label>
+      </div>
+      <label>Location <input name="location" value="Store 001"></label>
+      <div><button class="btn" id="go" type="submit">Triage ticket</button></div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+  <div id="result"><div class="empty">The triage result appears here.</div></div>
+</main>
+<script src="/render.js"></script>
+<script>
+  const form = document.getElementById("form"), go = document.getElementById("go");
+  const status = document.getElementById("status"), result = document.getElementById("result");
+  let examples = [];
+
+  fetch("/api/examples").then((r) => r.json()).then((list) => {
+    examples = list;
+    document.getElementById("samples").innerHTML = list.map((e, i) =>
+      `<button class="btn btn--quiet" type="button" data-i="${i}">${Triage.esc(e.label)}</button>`).join("");
+  }).catch(() => {});
+
+  document.getElementById("samples").addEventListener("click", (ev) => {
+    const b = ev.target.closest("button"); if (!b) return;
+    const e = examples[+b.dataset.i];
+    for (const k of ["subject", "description", "requester", "role", "location"]) form.elements[k].value = e[k];
+    form.elements.subject.focus();
+  });
+
+  form.addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    const ticket = Object.fromEntries(new FormData(form));
+    go.disabled = true; status.className = "status";
+    status.textContent = "Triaging. This takes 10 to 30 seconds on a laptop.";
+    try {
+      const res = await fetch("/api/triage", { method: "POST", headers: { "Content-Type": "application/json" },
+                                               body: JSON.stringify(ticket) });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "The server returned an error.");
+      result.innerHTML = Triage.detail(data);
+      status.textContent = `Done in ${data.latency_s} seconds.`;
+    } catch (err) {
+      status.className = "status error";
+      status.textContent = err.message;
+    } finally {
+      go.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
