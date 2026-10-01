@@ -2,7 +2,7 @@
 
 An AI agent that reads an IT help desk ticket the way an employee wrote it, works out what the problem is and how urgent it is, finds the right knowledge base article, and drafts a reply for a human agent to review. It runs entirely on free, local models.
 
-**[See it in action](#showcase)** (no install needed) · **[Read the write-up](WRITEUP.md)** · **[Run the live demo](#live-demo)**
+**[See it in action](https://jorgeabdulwork-coder.github.io/ai-help-desk-triage-agent/)** (no install needed) · **[Read the write-up](WRITEUP.md)** · **[Run the live demo](#live-demo)**
 
 **Results at a glance**
 - **97% fully correct** (problem type and priority) on 200 tickets no version had seen during tuning, up from 59% for the first prompt
